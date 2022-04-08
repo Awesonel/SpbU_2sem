@@ -1,34 +1,30 @@
 #include "stack.h"
 #include <stdio.h>
 #include <malloc.h>
+#include <string.h>
+#include "Additional.h"
 
-Stack* push(Stack **head, int value) {
+void push(Stack **head, char value, Token_type type) {
     Stack *new = malloc(sizeof(Stack));
+    new->type = type;
     new->value = value;
     new->next = *head;
     *head = new;
-    return *head;
 }
 
-int get(Stack *head, int *error_code) {
-    if (head != NULL) {
-        *error_code = 0;
-        return head->value;
-    }
-    *error_code = INVALID_OPERATION_EXCEPTION;
+char get(Stack *head) {
+    if (head != NULL) return head->value;
     return INVALID_OPERATION_EXCEPTION;
 }
 
-int pop(Stack **head, int *error_code) {
+char pop(Stack **head) {
     if (*head != NULL) {
-        *error_code = 0;
-        int result = (*head)->value;
+        char result = (*head)->value;
         Stack *temp = *head;
         *head = (*head)->next;
         free(temp);
         return result;
     }
-    *error_code = INVALID_OPERATION_EXCEPTION;
     return INVALID_OPERATION_EXCEPTION;
 }
 

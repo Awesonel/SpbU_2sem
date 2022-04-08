@@ -14,3 +14,9 @@ int GCD(int a, int b) {
 int LCM(int a, int b) {
     return (a * b) / GCD(a, b);
 }
+
+char *char_to_string(char symbol) {
+    char *str = calloc(2, sizeof(char));
+    str[0] = symbol;
+    return str;
+}

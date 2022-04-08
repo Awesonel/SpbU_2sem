@@ -1,6 +1,8 @@
 #ifndef STACK_TOKENS_H
 #define STACK_TOKENS_H
 
+int operation_precedence(char operation);
+
 enum token_type{
     NUMBER,
     OPERATION,
@@ -21,11 +23,8 @@ typedef struct token Token;
 // x - операция или нет
 int is_operation(char x);
 
-// *p_token становится "токеновским нулём"
-void add_zero_as_token(Token **p_token);
-
-// **p_token становится токеном, хранящим знак sign
-void add_sign_as_token(Token **p_token, char* sign);
+// Добавление токена в *p_token
+void add_token(Token **p_token, const char val[], enum token_type tt);
 
 // Создаёт токеновскую запись выражения expression
 Token* get_token_notation(char* expression);

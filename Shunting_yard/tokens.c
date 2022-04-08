@@ -1,50 +1,45 @@
 #include <malloc.h>
 #include <stdio.h>
 #include "tokens.h"
+#include "Additional.h"
 
 int is_operation(char x) {
     return ((x == '+') || (x == '-') || (x == '*') || (x == '/'));
 }
 
-void add_zero_as_token(Token **p_token) {
+void add_token(Token **p_token, const char val[], enum token_type tt) {
     (*p_token) = malloc(sizeof(Token));
-    (*p_token)->value = (char *) malloc(sizeof(char));
-    (*p_token)->value = "0";
-    (*p_token)->type = NUMBER;
+    (*p_token)->value = (char *) calloc(2, sizeof(char));
+    (*p_token)->value[0] = val[0];
+    (*p_token)->type = tt;
     (*p_token)->next = NULL;
 }
 
-void add_sign_as_token(Token **p_token, char* sign) {
-    (*p_token) = malloc(sizeof(Token));
-    (*p_token)->value = (char *) malloc(sizeof(char));
-    (*p_token)->value = sign;
-    (*p_token)->type = OPERATION;
-    (*p_token)->next = NULL;
+int operation_precedence(char operation) {
+    if (operation == '(' || operation == 'G' || operation == 'L') return 0;
+    if (operation == '+' || operation == '-') return 1;
+    return 2;
 }
 
 Token* get_token_notation(char* expression) {
     Token *token_notation;
-    add_zero_as_token(&token_notation);
+    add_token(&token_notation, "0", NUMBER);
+    if (*expression == '\0') return token_notation;
     Token *current_token = token_notation;
     char *ptr = expression;
-
     if (*ptr != '-') {
-        add_sign_as_token(&(current_token->next), "+");
+        add_token(&(current_token->next), "+", OPERATION);
         current_token = current_token->next;
     }
     int state = 0;
     while (*ptr != '\0') {
         switch (state) {
             case 1: {   // Создание "токеновского нуля" после открывающихся скобок и запятых
-                add_zero_as_token(&(current_token->next));
+                add_token(&(current_token->next), "0", NUMBER);
                 current_token = current_token->next;
                 if (*ptr != '-') {
-                    current_token->next = malloc(sizeof(Token));
+                    add_token(&(current_token->next), "+", OPERATION);
                     current_token = current_token->next;
-                    current_token->value = (char*)malloc(sizeof(char));
-                    current_token->value = "+";
-                    current_token->type = OPERATION;
-                    current_token->next = NULL;
                 }
                 state = 0;
                 break;
@@ -63,37 +58,33 @@ Token* get_token_notation(char* expression) {
                 break;
             }
             default: {  // Считывание строки
-                if (((*ptr) >= 48) && ((*ptr) <= 57)) {
+                if (((*ptr) >= '0') && ((*ptr) <= '9')) {
                     state = 2;
                 } else {
-                    current_token->next = malloc(sizeof(Token));
-                    current_token = current_token->next;
-                    current_token->value = (char *) malloc(sizeof(char));
-                    current_token->next = NULL;
                     if (is_operation(*ptr)) {
-                        current_token->type = OPERATION;
-                        current_token->value[0] = *ptr;
-                        current_token->value[1] = '\0';
+                        // char temp[2] = {*ptr, '\0'};
+                        add_token(&(current_token->next), char_to_string(*ptr), OPERATION);
+                        current_token = current_token->next;
                     } else if (*ptr == '(') {
-                        current_token->type = OPEN_BR;
-                        current_token->value = "(";
+                        add_token(&(current_token->next), "(", OPEN_BR);
+                        current_token = current_token->next;
                         state = 1;
                     } else if (*ptr == ')') {
-                        current_token->type = CLOSE_BR;
-                        current_token->value = ")";
+                        add_token(&(current_token->next), ")", CLOSE_BR);
+                        current_token = current_token->next;
                     } else if (*ptr == 'G') {
-                        current_token->type = FUNCTION;
-                        current_token->value = "G";
+                        add_token(&(current_token->next), "G", FUNCTION);
+                        current_token = current_token->next;
                         ptr += 3;
                         state = 1;
                     } else if (*ptr == 'L') {
-                        current_token->type = FUNCTION;
-                        current_token->value = "L";
+                        add_token(&(current_token->next), "L", FUNCTION);
+                        current_token = current_token->next;
                         ptr += 3;
                         state = 1;
                     } else if (*ptr == ',') {
-                        current_token->type = COMMA;
-                        current_token->value = ",";
+                        add_token(&(current_token->next), ",", COMMA);
+                        current_token = current_token->next;
                         state = 1;
                     }
                     ++ptr;

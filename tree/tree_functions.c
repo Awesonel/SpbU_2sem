@@ -2,35 +2,34 @@
 #include <malloc.h>
 #include "tree_functions.h"
 
+Tree *get_node(int val) {
+    Tree* tree = malloc(sizeof(Tree));
+    tree->value = val;
+    tree->left = NULL;
+    tree->right = NULL;
+    return tree;
+}
+
 void add_element(Tree **tree, int value) {
-    if ((*tree) == NULL) {
-        *tree = malloc(sizeof(Tree));
-        (*tree)->value = value;
-        (*tree)->left = NULL;
-        (*tree)->right = NULL;
-    }
-    else {
+    if (*tree) {
         Tree *ptr = *tree;
-        int flag = 1;
-        while (flag) {
+        while (ptr) {
             if (value >= ptr->value) {
                 if (ptr->right == NULL) {
-                    ptr->right = malloc(sizeof(Tree));
-                    flag = 0;
+                    ptr->right = get_node(value);
+                    break;
                 }
                 ptr = ptr->right;
             } else {
                 if (ptr->left == NULL) {
-                    ptr->left = malloc(sizeof(Tree));
-                    flag = 0;
+                    ptr->left = get_node(value);
+                    break;
                 }
                 ptr = ptr->left;
             }
         }
-        ptr->value = value;
-        ptr->left = NULL;
-        ptr->right = NULL;
     }
+    else *tree = get_node(value);
 }
 
 Tree *create_tree(const int *array, const int n) {
@@ -40,6 +39,8 @@ Tree *create_tree(const int *array, const int n) {
     }
     return result;
 }
+
+//void fill_array(Tree *tree, int *array, int *i);
 
 void fill_array(Tree *tree, int *array, int *i) {
     if (tree) {
