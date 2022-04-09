@@ -32,4 +32,6 @@ Token* get_token_notation(char* expression);
 // Вывод списка токенов
 void print_token_notation(Token *token_notation);
 
+void delete_token_list(Token **list);
+
 #endif //STACK_TOKENS_H

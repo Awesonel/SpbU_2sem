@@ -2,17 +2,29 @@
 #include <stdio.h>
 #include "tokens.h"
 #include "Additional.h"
+#include <string.h>
 
 int is_operation(char x) {
     return ((x == '+') || (x == '-') || (x == '*') || (x == '/'));
 }
 
 void add_token(Token **p_token, const char val[], enum token_type tt) {
-    (*p_token) = malloc(sizeof(Token));
-    (*p_token)->value = (char *) calloc(2, sizeof(char));
-    (*p_token)->value[0] = val[0];
-    (*p_token)->type = tt;
-    (*p_token)->next = NULL;
+    if (tt != NUMBER)
+    {
+        (*p_token) = malloc(sizeof(Token));
+        (*p_token)->value = (char *) calloc(2, sizeof(char));
+        (*p_token)->value[0] = val[0];
+        (*p_token)->type = tt;
+        (*p_token)->next = NULL;
+    }
+    else
+    {
+        (*p_token) = malloc(sizeof(Token));
+        (*p_token)->value = (char *) calloc(10, sizeof(char));
+        strcpy((*p_token)->value, val);
+        (*p_token)->type = tt;
+        (*p_token)->next = NULL;
+    }
 }
 
 int operation_precedence(char operation) {
@@ -97,10 +109,21 @@ Token* get_token_notation(char* expression) {
     return token_notation;
 }
 
+void delete_token_list(Token **list)
+{
+    while (*list)
+    {
+        Token *temp = (*list)->next;
+        free(*list);
+        *list = temp;
+    }
+}
+
 void print_token_notation(Token *token_notation) {
     Token *ptr = token_notation;
     while (ptr) {
         printf("%s ", ptr->value);
         ptr = ptr->next;
     }
+    printf("\n");
 }

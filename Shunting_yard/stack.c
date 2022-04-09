@@ -36,3 +36,13 @@ void print_stack(Stack *head) {
     }
     printf("---\n");
 }
+
+void delete_stack(Stack **stack)
+{
+    while (*stack)
+    {
+        Stack *temp = (*stack)->next;
+        free(*stack);
+        *stack = temp;
+    }
+}

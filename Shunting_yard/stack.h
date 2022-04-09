@@ -11,9 +11,12 @@ typedef struct stack {
 } Stack;
 
 
+
 void push(Stack **head, char value, Token_type type);
 char get(Stack *head);
 char pop(Stack **head);
+
+void delete_stack(Stack **stack);
 
 void print_stack(Stack *head);
 
