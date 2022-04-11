@@ -12,7 +12,7 @@ int GCD(int a, int b) {
 }
 
 int LCM(int a, int b) {
-    return (a * b) / GCD(a, b);
+    return abs((a * b) / GCD(a, b));
 }
 
 char *char_to_string(char symbol) {

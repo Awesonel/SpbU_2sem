@@ -4,11 +4,13 @@
 #include "Additional.h"
 #include <string.h>
 
-int is_operation(char x) {
+int is_operation(char x)
+{
     return ((x == '+') || (x == '-') || (x == '*') || (x == '/'));
 }
 
-void add_token(Token **p_token, const char val[], enum token_type tt) {
+void add_token(Token **p_token, const char val[], enum token_type tt)
+{
     if (tt != NUMBER)
     {
         (*p_token) = malloc(sizeof(Token));
@@ -27,36 +29,44 @@ void add_token(Token **p_token, const char val[], enum token_type tt) {
     }
 }
 
-int operation_precedence(char operation) {
+int operation_precedence(char operation)
+{
     if (operation == '(' || operation == 'G' || operation == 'L') return 0;
     if (operation == '+' || operation == '-') return 1;
     return 2;
 }
 
-Token* get_token_notation(char* expression) {
+Token* get_token_notation(char* expression)
+{
     Token *token_notation;
     add_token(&token_notation, "0", NUMBER);
     if (*expression == '\0') return token_notation;
     Token *current_token = token_notation;
     char *ptr = expression;
-    if (*ptr != '-') {
+    if (*ptr != '-')
+    {
         add_token(&(current_token->next), "+", OPERATION);
         current_token = current_token->next;
     }
     int state = 0;
-    while (*ptr != '\0') {
-        switch (state) {
-            case 1: {   // Создание "токеновского нуля" после открывающихся скобок и запятых
+    while (*ptr != '\0')
+    {
+        switch (state)
+        {
+            case 1:     // Создание "токеновского нуля" после открывающихся скобок и запятых
+            {
                 add_token(&(current_token->next), "0", NUMBER);
                 current_token = current_token->next;
-                if (*ptr != '-') {
+                if (*ptr != '-')
+                {
                     add_token(&(current_token->next), "+", OPERATION);
                     current_token = current_token->next;
                 }
                 state = 0;
                 break;
             }
-            case 2: {   // Запись числа как токена
+            case 2:     // Запись числа как токена
+            {
                 char *temp = ptr;
                 int number = strtol(ptr, &ptr, 10);
                 int number_length =(int) (ptr - temp);
@@ -69,32 +79,44 @@ Token* get_token_notation(char* expression) {
                 state = 0;
                 break;
             }
-            default: {  // Считывание строки
-                if (((*ptr) >= '0') && ((*ptr) <= '9')) {
-                    state = 2;
-                } else {
-                    if (is_operation(*ptr)) {
+            default:    // Считывание строки
+            {
+                if (((*ptr) >= '0') && ((*ptr) <= '9')) state = 2;
+                else
+                {
+                    if (is_operation(*ptr))
+                    {
                         // char temp[2] = {*ptr, '\0'};
                         add_token(&(current_token->next), char_to_string(*ptr), OPERATION);
                         current_token = current_token->next;
-                    } else if (*ptr == '(') {
+                    }
+                    else if (*ptr == '(')
+                    {
                         add_token(&(current_token->next), "(", OPEN_BR);
                         current_token = current_token->next;
                         state = 1;
-                    } else if (*ptr == ')') {
+                    }
+                    else if (*ptr == ')')
+                    {
                         add_token(&(current_token->next), ")", CLOSE_BR);
                         current_token = current_token->next;
-                    } else if (*ptr == 'G') {
+                    }
+                    else if (*ptr == 'G')
+                    {
                         add_token(&(current_token->next), "G", FUNCTION);
                         current_token = current_token->next;
                         ptr += 3;
                         state = 1;
-                    } else if (*ptr == 'L') {
+                    }
+                    else if (*ptr == 'L')
+                    {
                         add_token(&(current_token->next), "L", FUNCTION);
                         current_token = current_token->next;
                         ptr += 3;
                         state = 1;
-                    } else if (*ptr == ',') {
+                    }
+                    else if (*ptr == ',')
+                    {
                         add_token(&(current_token->next), ",", COMMA);
                         current_token = current_token->next;
                         state = 1;
@@ -104,7 +126,6 @@ Token* get_token_notation(char* expression) {
                 break;
             }
         }
-
     }
     return token_notation;
 }
@@ -119,9 +140,11 @@ void delete_token_list(Token **list)
     }
 }
 
-void print_token_notation(Token *token_notation) {
+void print_token_notation(Token *token_notation)
+{
     Token *ptr = token_notation;
-    while (ptr) {
+    while (ptr)
+    {
         printf("%s ", ptr->value);
         ptr = ptr->next;
     }

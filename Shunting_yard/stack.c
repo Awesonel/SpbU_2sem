@@ -1,26 +1,28 @@
 #include "stack.h"
 #include <stdio.h>
 #include <malloc.h>
-#include <string.h>
-#include "Additional.h"
 
-void push(Stack **head, char value, Token_type type) {
-    Stack *new = malloc(sizeof(Stack));
+void push_token(Stack_tokens **head, char value, Token_type type)
+{
+    Stack_tokens *new = malloc(sizeof(Stack_tokens));
     new->type = type;
     new->value = value;
     new->next = *head;
     *head = new;
 }
 
-char get(Stack *head) {
+char get_token(Stack_tokens *head)
+{
     if (head != NULL) return head->value;
     return INVALID_OPERATION_EXCEPTION;
 }
 
-char pop(Stack **head) {
-    if (*head != NULL) {
+char pop_token(Stack_tokens **head)
+{
+    if (*head != NULL)
+    {
         char result = (*head)->value;
-        Stack *temp = *head;
+        Stack_tokens *temp = *head;
         *head = (*head)->next;
         free(temp);
         return result;
@@ -28,20 +30,42 @@ char pop(Stack **head) {
     return INVALID_OPERATION_EXCEPTION;
 }
 
-void print_stack(Stack *head) {
-    Stack *ptr = head;
-    while (ptr) {
-        printf("%d\n", ptr->value);
-        ptr = ptr->next;
-    }
-    printf("---\n");
+void push_number(Stack_numbers **head, int value)
+{
+    Stack_numbers *new = malloc(sizeof(Stack_numbers));
+    new->value = value;
+    new->next = *head;
+    *head = new;
 }
 
-void delete_stack(Stack **stack)
+int pop_number(Stack_numbers **head)
+{
+    if (*head != NULL)
+    {
+        int result = (*head)->value;
+        Stack_numbers *temp = *head;
+        *head = (*head)->next;
+        free(temp);
+        return result;
+    }
+    return INVALID_OPERATION_EXCEPTION;
+}
+
+void delete_stack_operations(Stack_tokens **stack)
 {
     while (*stack)
     {
-        Stack *temp = (*stack)->next;
+        Stack_tokens *temp = (*stack)->next;
+        free(*stack);
+        *stack = temp;
+    }
+}
+
+void delete_stack_numbers(Stack_numbers **stack)
+{
+    while (*stack)
+    {
+        Stack_numbers *temp = (*stack)->next;
         free(*stack);
         *stack = temp;
     }

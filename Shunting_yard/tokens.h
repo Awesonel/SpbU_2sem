@@ -3,7 +3,8 @@
 
 int operation_precedence(char operation);
 
-enum token_type{
+enum token_type
+{
     NUMBER,
     OPERATION,
     OPEN_BR,
@@ -11,13 +12,16 @@ enum token_type{
     FUNCTION,
     COMMA,
 };
+
 typedef enum token_type Token_type;
 
-struct token {
+struct token
+{
     Token_type type;
     char* value;
     struct token *next;
 };
+
 typedef struct token Token;
 
 // x - операция или нет
