@@ -4,7 +4,7 @@
 
 int main()
 {
-    Token *tokens = get_token_notation("-36+GCD(-45+12/2,(14+1)*2)");
+    Token *tokens = get_token_notation("GCD(-12,3)");//"-36+GCD(-45+12/2,(14+1)*2)");
     print_token_notation(tokens);
 
     tokens = shunting_yard(tokens);

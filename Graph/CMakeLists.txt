@@ -3,4 +3,4 @@ project(Graph C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Graph main.c graph.c graph.h)
+add_executable(Graph main.c graph.c graph.h bfs_and_dfs.c bfs_and_dfs.h stack.c stack.h)

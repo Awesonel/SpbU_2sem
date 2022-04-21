@@ -18,5 +18,6 @@ int LCM(int a, int b) {
 char *char_to_string(char symbol) {
     char *str = calloc(2, sizeof(char));
     str[0] = symbol;
+    str[1] = '\0';
     return str;
 }

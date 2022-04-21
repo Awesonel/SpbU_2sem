@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include "graph.h"
 
-graph* graph_init(int node_number)
+Graph* graph_init(int node_number)
 {
-    graph *result = malloc(sizeof(graph));
+    Graph *result = malloc(sizeof(Graph));
     result->count = node_number;
     result->adj_list = (node**)calloc(node_number, sizeof(node*));
     for (int i = 0; i < node_number; ++i)
@@ -12,15 +12,31 @@ graph* graph_init(int node_number)
     return result;
 }
 
-void add_edge(graph* graph, int begin, int end)
+void add_edge(Graph* graph, int begin, int end)
 {
     node *temp = graph->adj_list[begin];
+    while (temp)
+    {
+        if (temp->name == end)
+        {
+            return;
+        }
+        temp = temp->next;
+    }
+
+    temp = graph->adj_list[begin];
     graph->adj_list[begin] = calloc(1, sizeof(node));
     graph->adj_list[begin]->name = end;
     graph->adj_list[begin]->next = temp;
 }
 
-void delete_edge(graph* graph, int begin, int end)
+void add_arc(Graph* graph, int first_node, int second_node)
+{
+    add_edge(graph, first_node, second_node);
+    add_edge(graph, second_node, first_node);
+}
+
+void delete_edge(Graph* graph, int begin, int end)
 {
     node *ptr = graph->adj_list[begin];
     if (ptr != NULL)
@@ -47,7 +63,7 @@ void delete_edge(graph* graph, int begin, int end)
     }
 }
 
-void print_graph(graph* graph)
+void print_graph(Graph* graph)
 {
     for (int i = 0; i < graph->count; ++i)
     {
@@ -62,7 +78,7 @@ void print_graph(graph* graph)
     }
 }
 
-void delete_graph(graph** graph)
+void delete_graph(Graph** graph)
 {
     for (int i = 0; i < (*graph)->count; ++i)
     {
@@ -78,3 +94,4 @@ void delete_graph(graph** graph)
     free(*graph);
     *graph = NULL;
 }
+
